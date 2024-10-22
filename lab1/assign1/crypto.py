@@ -53,7 +53,19 @@ def encrypt_vigenere(plaintext, keyword):
 
     Add more implementation details here.
     """
-    raise NotImplementedError  # Your implementation here
+    i = 0
+    encrypted = ""
+    keyword = keyword.upper()
+    
+    for char in plaintext:
+        if char.isalpha():
+            shift = ord(keyword[i % len(keyword)]) - ord('A') 
+            encrypted += chr((ord(char.upper()) - ord('A') + shift) % 26 + ord('A'))
+            i += 1
+        else:
+            encrypted += char
+
+    return encrypted
 
 
 def decrypt_vigenere(ciphertext, keyword):
@@ -61,7 +73,19 @@ def decrypt_vigenere(ciphertext, keyword):
 
     Add more implementation details here.
     """
-    raise NotImplementedError  # Your implementation here
+    i = 0
+    decrypted = ""
+    keyword = keyword.upper()
+
+    for char in ciphertext:
+        if char.isalpha():
+            shift = ord(keyword[i % len(keyword)]) - ord('A') 
+            decrypted += chr((ord(char.upper()) - ord('A') - shift) % 26 + ord('A'))
+            i += 1
+        else:
+            decrypted += char 
+
+    return decrypted
 
 
 # Merkle-Hellman Knapsack Cryptosystem
@@ -144,4 +168,72 @@ def decrypt_mh(message, private_key):
     @return bytearray or str of decrypted characters
     """
     raise NotImplementedError  # Your implementation here
+
+def encrypt_railfence(plaintext, num_rails):
+    """Encrypt the plaintext using the Rail Fence Cipher with a specified number of rails."""
+    
+    if num_rails == 1:
+        return plaintext  
+    
+    rails = [''] * num_rails
+    direction_down = True
+    current_rail = 0
+    
+    for char in plaintext:
+        rails[current_rail] += char
+        
+        print(f"{char} {current_rail}")
+        
+        if(direction_down):
+            current_rail += 1
+        else:
+            current_rail -= 1
+            
+        if current_rail == 0 or current_rail == num_rails - 1:
+            direction_down = not direction_down
+    
+    return ''.join(rails)
+
+def decrypt_railfence(ciphertext, num_rails):
+    """Decrypt the plaintext using the Rail Fence Cipher with a specified number of rails."""
+    
+    if num_rails == 1:
+        return ciphertext
+
+    rail_lengths = [0] * num_rails
+    direction_down = False
+    current_rail = 0
+
+    for _ in range(len(ciphertext)): #kiszamolja mindegyik rail hany karakterbol all
+        rail_lengths[current_rail] += 1
+        if current_rail == 0 or current_rail == num_rails - 1:
+            direction_down = not direction_down
+        if direction_down:
+            current_rail += 1
+        else:
+            current_rail -= 1
+
+    rails = [''] * num_rails
+    index = 0
+ 
+    for rail in range(num_rails):   #elossza a karaktereket a raileken
+        for _ in range(rail_lengths[rail]):
+            rails[rail] += ciphertext[index]
+            index += 1
+
+    plaintext = []
+    current_rail = 0
+    direction_down = False
+
+    for _ in range(len(ciphertext)):  #osszeolvassa a szoveget a zigzag modon
+        plaintext.append(rails[current_rail][0])
+        rails[current_rail] = rails[current_rail][1:]
+        if current_rail == 0 or current_rail == num_rails - 1:
+            direction_down = not direction_down
+        if direction_down:
+            current_rail += 1
+        else:
+            current_rail -= 1
+
+    return ''.join(plaintext)
 
