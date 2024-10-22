@@ -4,8 +4,8 @@ File: crypto.py
 ---------------
 Assignment 1: Cryptography
 Course: CS 41
-Name: <YOUR NAME>
-SUNet: <SUNet ID>
+Name: Turzo Nandor Tibor
+ID: tnim2314
 
 Replace this with a description of the program.
 """
@@ -18,7 +18,16 @@ def encrypt_caesar(plaintext):
 
     Add more implementation details here.
     """
-    raise NotImplementedError  # Your implementation here
+    encrypted = ""
+    
+    for char in plaintext:
+        if char.isalpha(): 
+            shifted = (ord(char) - ord('A') + 3) % 26 + ord('A')
+            encrypted += chr(shifted)
+        else:
+            encrypted += char
+            
+    return encrypted
 
 
 def decrypt_caesar(ciphertext):
@@ -26,8 +35,16 @@ def decrypt_caesar(ciphertext):
 
     Add more implementation details here.
     """
-    raise NotImplementedError  # Your implementation here
-
+    decrypted = ""
+    
+    for char in ciphertext:
+        if char.isalpha():
+            shifted = (ord(char) - ord('A') - 3) % 26 + ord('A')
+            decrypted += chr(shifted)
+        else:
+            decrypted += char
+            
+    return decrypted
 
 # Vigenere Cipher
 
