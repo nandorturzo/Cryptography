@@ -196,6 +196,11 @@ def decrypt_mh(message, private_key):
 def encrypt_scytale(plaintext, circumference):
     """Encrypt the plaintext using the Scytale Cipher with a circumference."""
     
+    if not plaintext:
+        raise ValueError("Plaintext must not be empty")
+    if circumference < 1:
+        raise ValueError("Circumference must be greater than 0")
+    
     rows = [''] * circumference     
     for i, char in enumerate(plaintext):
         row = i % circumference
@@ -205,6 +210,11 @@ def encrypt_scytale(plaintext, circumference):
 
 def decrypt_scytale(ciphertext, circumference):
     """Decrypt the ciphertext using the Scytale Cipher with a circumference."""
+    
+    if not ciphertext:
+        raise ValueError("Plaintext must not be empty")
+    if circumference < 1:
+        raise ValueError("Circumference must be greater than 0")
     
     num_rows = (len(ciphertext) + circumference - 1) // circumference
 
@@ -229,6 +239,11 @@ def decrypt_scytale(ciphertext, circumference):
 def encrypt_railfence(plaintext, num_rails):
     """Encrypt the plaintext using the Rail Fence Cipher with a specified number of rails."""
     
+    if not plaintext:
+        raise ValueError("Plaintext must not be empty")
+    if num_rails < 1:
+        raise ValueError("Number of rails must be greater than 0")
+    
     if num_rails == 1:
         return plaintext  
     
@@ -251,6 +266,11 @@ def encrypt_railfence(plaintext, num_rails):
 
 def decrypt_railfence(ciphertext, num_rails):
     """Decrypt the ciphertext using the Rail Fence Cipher with a specified number of rails."""
+    
+    if not ciphertext:
+        raise ValueError("Ciphertext must not be empty")
+    if num_rails < 1:
+        raise ValueError("Number of rails must be greater than 0")
     
     if num_rails == 1:
         return ciphertext
