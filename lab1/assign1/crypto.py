@@ -18,11 +18,16 @@ def encrypt_caesar(plaintext):
 
     Add more implementation details here.
     """
+    
+    if not plaintext:
+        raise ValueError("Plaintext must not be empty")
+    
     encrypted = ""
     
     for char in plaintext:
         if char.isalpha(): 
-            shifted = (ord(char) - ord('A') + 3) % 26 + ord('A')
+            base = ord('A') if char.isupper() else ord('a')
+            shifted = (ord(char) - base + 3) % 26 + base
             encrypted += chr(shifted)
         else:
             encrypted += char
@@ -35,11 +40,16 @@ def decrypt_caesar(ciphertext):
 
     Add more implementation details here.
     """
+    
+    if not ciphertext:
+        raise ValueError("Plaintext must not be empty")
+    
     decrypted = ""
     
     for char in ciphertext:
         if char.isalpha():
-            shifted = (ord(char) - ord('A') - 3) % 26 + ord('A')
+            base = ord('A') if char.isupper() else ord('a')
+            shifted = (ord(char) - base - 3) % 26 + base
             decrypted += chr(shifted)
         else:
             decrypted += char
@@ -53,14 +63,21 @@ def encrypt_vigenere(plaintext, keyword):
 
     Add more implementation details here.
     """
+    
+    if not plaintext:
+        raise ValueError("Plaintext must not be empty") 
+    if not keyword:
+        raise ValueError("Keyword must not be empty")
+    
     i = 0
     encrypted = ""
     keyword = keyword.upper()
     
     for char in plaintext:
         if char.isalpha():
-            shift = ord(keyword[i % len(keyword)]) - ord('A') 
-            encrypted += chr((ord(char.upper()) - ord('A') + shift) % 26 + ord('A'))
+            base = ord('A') if char.isupper() else ord('a')
+            shift = ord(keyword[i % len(keyword)]) - ord('A')
+            encrypted += chr((ord(char) - base + shift) % 26 + base)
             i += 1
         else:
             encrypted += char
@@ -73,14 +90,21 @@ def decrypt_vigenere(ciphertext, keyword):
 
     Add more implementation details here.
     """
+    
+    if not ciphertext:
+        raise ValueError("Plaintext must not be empty")
+    if not keyword:
+        raise ValueError("Keyword must not be empty")
+    
     i = 0
     decrypted = ""
     keyword = keyword.upper()
 
     for char in ciphertext:
         if char.isalpha():
-            shift = ord(keyword[i % len(keyword)]) - ord('A') 
-            decrypted += chr((ord(char.upper()) - ord('A') - shift) % 26 + ord('A'))
+            base = ord('A') if char.isupper() else ord('a')
+            shift = ord(keyword[i % len(keyword)]) - ord('A')
+            decrypted += chr((ord(char) - base - shift) % 26 + base)
             i += 1
         else:
             decrypted += char 
@@ -169,6 +193,39 @@ def decrypt_mh(message, private_key):
     """
     raise NotImplementedError  # Your implementation here
 
+def encrypt_scytale(plaintext, circumference):
+    """Encrypt the plaintext using the Scytale Cipher with a circumference."""
+    
+    rows = [''] * circumference     
+    for i, char in enumerate(plaintext):
+        row = i % circumference
+        rows[row] += char
+
+    return ''.join(rows)
+
+def decrypt_scytale(ciphertext, circumference):
+    """Decrypt the ciphertext using the Scytale Cipher with a circumference."""
+    
+    num_rows = (len(ciphertext) + circumference - 1) // circumference
+
+    rows = [''] * circumference
+    
+    index = 0
+    for rail in range(circumference):
+        for _ in range(num_rows):
+            if index < len(ciphertext):
+                rows[rail] += ciphertext[index]
+                index += 1
+
+    plaintext = []
+    for row in range(num_rows):
+        for col in range(circumference):
+            if row < len(rows[col]):
+                plaintext.append(rows[col][row])
+
+    return ''.join(plaintext)
+
+
 def encrypt_railfence(plaintext, num_rails):
     """Encrypt the plaintext using the Rail Fence Cipher with a specified number of rails."""
     
@@ -182,8 +239,6 @@ def encrypt_railfence(plaintext, num_rails):
     for char in plaintext:
         rails[current_rail] += char
         
-        print(f"{char} {current_rail}")
-        
         if(direction_down):
             current_rail += 1
         else:
@@ -195,7 +250,7 @@ def encrypt_railfence(plaintext, num_rails):
     return ''.join(rails)
 
 def decrypt_railfence(ciphertext, num_rails):
-    """Decrypt the plaintext using the Rail Fence Cipher with a specified number of rails."""
+    """Decrypt the ciphertext using the Rail Fence Cipher with a specified number of rails."""
     
     if num_rails == 1:
         return ciphertext
