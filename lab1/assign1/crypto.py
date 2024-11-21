@@ -4,8 +4,8 @@ File: crypto.py
 ---------------
 Assignment 1: Cryptography
 Course: CS 41
-Name: <YOUR NAME>
-SUNet: <SUNet ID>
+Name: Turzo Nandor Tibor
+ID: tnim2314
 
 Replace this with a description of the program.
 """
@@ -18,7 +18,21 @@ def encrypt_caesar(plaintext):
 
     Add more implementation details here.
     """
-    raise NotImplementedError  # Your implementation here
+    
+    if not plaintext:
+        raise ValueError("Plaintext must not be empty")
+    
+    encrypted = ""
+    
+    for char in plaintext:
+        if char.isalpha(): 
+            base = ord('A') if char.isupper() else ord('a')
+            shifted = (ord(char) - base + 3) % 26 + base
+            encrypted += chr(shifted)
+        else:
+            encrypted += char
+            
+    return encrypted
 
 
 def decrypt_caesar(ciphertext):
@@ -26,8 +40,21 @@ def decrypt_caesar(ciphertext):
 
     Add more implementation details here.
     """
-    raise NotImplementedError  # Your implementation here
-
+    
+    if not ciphertext:
+        raise ValueError("Plaintext must not be empty")
+    
+    decrypted = ""
+    
+    for char in ciphertext:
+        if char.isalpha():
+            base = ord('A') if char.isupper() else ord('a')
+            shifted = (ord(char) - base - 3) % 26 + base
+            decrypted += chr(shifted)
+        else:
+            decrypted += char
+            
+    return decrypted
 
 # Vigenere Cipher
 
@@ -36,7 +63,26 @@ def encrypt_vigenere(plaintext, keyword):
 
     Add more implementation details here.
     """
-    raise NotImplementedError  # Your implementation here
+    
+    if not plaintext:
+        raise ValueError("Plaintext must not be empty") 
+    if not keyword:
+        raise ValueError("Keyword must not be empty")
+    
+    i = 0
+    encrypted = ""
+    keyword = keyword.upper()
+    
+    for char in plaintext:
+        if char.isalpha():
+            base = ord('A') if char.isupper() else ord('a')
+            shift = ord(keyword[i % len(keyword)]) - ord('A')
+            encrypted += chr((ord(char) - base + shift) % 26 + base)
+            i += 1
+        else:
+            encrypted += char
+
+    return encrypted
 
 
 def decrypt_vigenere(ciphertext, keyword):
@@ -44,7 +90,26 @@ def decrypt_vigenere(ciphertext, keyword):
 
     Add more implementation details here.
     """
-    raise NotImplementedError  # Your implementation here
+    
+    if not ciphertext:
+        raise ValueError("Plaintext must not be empty")
+    if not keyword:
+        raise ValueError("Keyword must not be empty")
+    
+    i = 0
+    decrypted = ""
+    keyword = keyword.upper()
+
+    for char in ciphertext:
+        if char.isalpha():
+            base = ord('A') if char.isupper() else ord('a')
+            shift = ord(keyword[i % len(keyword)]) - ord('A')
+            decrypted += chr((ord(char) - base - shift) % 26 + base)
+            i += 1
+        else:
+            decrypted += char 
+
+    return decrypted
 
 
 # Merkle-Hellman Knapsack Cryptosystem
@@ -127,4 +192,123 @@ def decrypt_mh(message, private_key):
     @return bytearray or str of decrypted characters
     """
     raise NotImplementedError  # Your implementation here
+
+def encrypt_scytale(plaintext, circumference):
+    """Encrypt the plaintext using the Scytale Cipher with a circumference."""
+    
+    if not plaintext:
+        raise ValueError("Plaintext must not be empty")
+    if circumference < 1:
+        raise ValueError("Circumference must be greater than 0")
+    
+    rows = [''] * circumference     
+    for i, char in enumerate(plaintext):
+        row = i % circumference
+        rows[row] += char
+
+    return ''.join(rows)
+
+def decrypt_scytale(ciphertext, circumference):
+    """Decrypt the ciphertext using the Scytale Cipher with a circumference."""
+    
+    if not ciphertext:
+        raise ValueError("Plaintext must not be empty")
+    if circumference < 1:
+        raise ValueError("Circumference must be greater than 0")
+    
+    num_rows = (len(ciphertext) + circumference - 1) // circumference
+
+    rows = [''] * circumference
+    
+    index = 0
+    for rail in range(circumference):
+        for _ in range(num_rows):
+            if index < len(ciphertext):
+                rows[rail] += ciphertext[index]
+                index += 1
+
+    plaintext = []
+    for row in range(num_rows):
+        for col in range(circumference):
+            if row < len(rows[col]):
+                plaintext.append(rows[col][row])
+
+    return ''.join(plaintext)
+
+
+def encrypt_railfence(plaintext, num_rails):
+    """Encrypt the plaintext using the Rail Fence Cipher with a specified number of rails."""
+    
+    if not plaintext:
+        raise ValueError("Plaintext must not be empty")
+    if num_rails < 1:
+        raise ValueError("Number of rails must be greater than 0")
+    
+    if num_rails == 1:
+        return plaintext  
+    
+    rails = [''] * num_rails
+    direction_down = True
+    current_rail = 0
+    
+    for char in plaintext:
+        rails[current_rail] += char
+        
+        if(direction_down):
+            current_rail += 1
+        else:
+            current_rail -= 1
+            
+        if current_rail == 0 or current_rail == num_rails - 1:
+            direction_down = not direction_down
+    
+    return ''.join(rails)
+
+def decrypt_railfence(ciphertext, num_rails):
+    """Decrypt the ciphertext using the Rail Fence Cipher with a specified number of rails."""
+    
+    if not ciphertext:
+        raise ValueError("Ciphertext must not be empty")
+    if num_rails < 1:
+        raise ValueError("Number of rails must be greater than 0")
+    
+    if num_rails == 1:
+        return ciphertext
+
+    rail_lengths = [0] * num_rails
+    direction_down = False
+    current_rail = 0
+
+    for _ in range(len(ciphertext)): #kiszamolja mindegyik rail hany karakterbol all
+        rail_lengths[current_rail] += 1
+        if current_rail == 0 or current_rail == num_rails - 1:
+            direction_down = not direction_down
+        if direction_down:
+            current_rail += 1
+        else:
+            current_rail -= 1
+
+    rails = [''] * num_rails
+    index = 0
+ 
+    for rail in range(num_rails):   #elossza a karaktereket a raileken
+        for _ in range(rail_lengths[rail]):
+            rails[rail] += ciphertext[index]
+            index += 1
+
+    plaintext = []
+    current_rail = 0
+    direction_down = False
+
+    for _ in range(len(ciphertext)):  #osszeolvassa a szoveget a zigzag modon
+        plaintext.append(rails[current_rail][0])
+        rails[current_rail] = rails[current_rail][1:]
+        if current_rail == 0 or current_rail == num_rails - 1:
+            direction_down = not direction_down
+        if direction_down:
+            current_rail += 1
+        else:
+            current_rail -= 1
+
+    return ''.join(plaintext)
 
