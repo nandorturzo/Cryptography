@@ -12,8 +12,9 @@ class CustomModes:
     def ecb_encrypt(self, data):
         """ECB mode encryption."""
         encrypted = b""
-        for i in range(0, len(data), self.block_size):
-            block = data[i:i + self.block_size]
+        block_size = self.block_size//8
+        for i in range(0, len(data), block_size):
+            block = data[i:i + block_size]
             encrypted_block = self.cipher.encrypt_block(block)
             encrypted += encrypted_block
         return encrypted
@@ -21,8 +22,9 @@ class CustomModes:
     def ecb_decrypt(self, data):
         """ECB mode decryption."""
         decrypted = b""
-        for i in range(0, len(data), self.block_size):
-            block = data[i:i + self.block_size]
+        block_size = self.block_size//8
+        for i in range(0, len(data), block_size):
+            block = data[i:i + block_size]
             decrypted_block = self.cipher.decrypt_block(block)
             decrypted += decrypted_block
         return decrypted
@@ -31,8 +33,9 @@ class CustomModes:
         """CBC mode encryption."""
         previous_block = self.iv
         encrypted = b""
-        for i in range(0, len(data), self.block_size):
-            block = data[i:i + self.block_size]
+        block_size = self.block_size//8
+        for i in range(0, len(data), block_size):
+            block = data[i:i + block_size]
             block = self._xor_bytes(block, previous_block)
             encrypted_block = self.cipher.encrypt_block(block)
             encrypted += encrypted_block
@@ -43,8 +46,9 @@ class CustomModes:
         """CBC mode decryption."""
         previous_block = self.iv
         decrypted = b""
-        for i in range(0, len(data), self.block_size):
-            block = data[i:i + self.block_size]
+        block_size = self.block_size//8
+        for i in range(0, len(data), block_size):
+            block = data[i:i + block_size]
             decrypted_block = self.cipher.decrypt_block(block)
             decrypted_block = self._xor_bytes(decrypted_block, previous_block)
             decrypted += decrypted_block
@@ -55,11 +59,12 @@ class CustomModes:
         """CFB mode encryption."""
         previous_block = self.iv
         encrypted = b""
-        for i in range(0, len(data), self.block_size):
+        block_size = self.block_size//8
+        for i in range(0, len(data), block_size):
             encrypted_block = self.cipher.encrypt_block(previous_block)
-            block = data[i:i + self.block_size]
-            encrypted_block = self._xor_bytes(block, encrypted_block)
-            encrypted += encrypted_block
+            block = data[i:i + block_size]
+            encrypted_block_xor = self._xor_bytes(block, encrypted_block)
+            encrypted += encrypted_block_xor
             previous_block = encrypted_block
         return encrypted
 
@@ -67,21 +72,23 @@ class CustomModes:
         """CFB mode decryption."""
         previous_block = self.iv
         decrypted = b""
-        for i in range(0, len(data), self.block_size):
-            encrypted_block = self.cipher.encrypt_block(previous_block)
-            block = data[i:i + self.block_size]
-            decrypted_block = self._xor_bytes(block, encrypted_block)
-            decrypted += decrypted_block
-            previous_block = encrypted_block
+        block_size = self.block_size//8
+        for i in range(0, len(data), block_size):
+            decrypted_block = self.cipher.decrypt_block(previous_block)
+            block = data[i:i + block_size]
+            decrypted_block_xor = self._xor_bytes(block, decrypted_block)
+            decrypted += decrypted_block_xor
+            previous_block = block
         return decrypted
 
     def ofb_encrypt(self, data):
         """OFB mode encryption."""
         previous_block = self.iv
         encrypted = b""
-        for i in range(0, len(data), self.block_size):
+        block_size = self.block_size//8
+        for i in range(0, len(data), block_size):
             previous_block = self.cipher.encrypt_block(previous_block)
-            block = data[i:i + self.block_size]
+            block = data[i:i + block_size]
             encrypted_block = self._xor_bytes(block, previous_block)
             encrypted += encrypted_block
         return encrypted
@@ -94,9 +101,10 @@ class CustomModes:
         """CTR mode encryption."""
         counter = int.from_bytes(self.iv, 'big')
         encrypted = b""
-        for i in range(0, len(data), self.block_size):
-            block = data[i:i + self.block_size]
-            counter_block = counter.to_bytes(self.block_size, 'big')
+        block_size = self.block_size//8
+        for i in range(0, len(data), block_size):
+            block = data[i:i + block_size]
+            counter_block = counter.to_bytes(block_size, 'big')
             encrypted_counter = self.cipher.encrypt_block(counter_block)
             xor_block = self._xor_bytes(block, encrypted_counter)
             encrypted += xor_block

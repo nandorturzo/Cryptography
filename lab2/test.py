@@ -11,12 +11,12 @@ def write_gif(file_path, data):
     with open(file_path, 'wb') as file:
         file.write(data)
 
-def run_test(config_file, input_file, output_folder):
+def run_test(config_file,input_file, output_folder):
     with open(config_file, 'r') as file:
         config = json.load(file)
-    
-    data = read_gif(input_file)
-    
+        
+    data = read_gif(input_file)   
+        
     block_crypting = BlockCrypting(config_file)
     
     algorithm = config["algorithm"]
@@ -28,7 +28,7 @@ def run_test(config_file, input_file, output_folder):
     
     output_decrypted_file = os.path.join(output_folder, f"output-{algorithm}-{mode}-decrypted.gif")
     write_gif(output_decrypted_file, decrypted_data)
-    print(f"Decrypted file written to {output_decrypted_file}")
+    # print(f"Decrypted file written to {output_decrypted_file}")
 
 def main():
     output_folder = "output"
@@ -53,7 +53,7 @@ def main():
     # Run tests for each configuration
     for config_file in config_files:
         print(f"Running test with config: {config_file}")
-        run_test(config_file, input_file, output_folder)
+        run_test(config_file,input_file, output_folder)
 
 if __name__ == "__main__":
     main()
