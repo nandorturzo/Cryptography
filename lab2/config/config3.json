@@ -1,0 +1,8 @@
+{
+    "text_length": 64,
+    "algorithm": "AES",
+    "key": "1234567890123456",
+    "mode": "CFB",
+    "iv": "abcdef9876543210",
+    "padding": "Zero-padding"
+  }

@@ -1,0 +1,9 @@
+{
+    "text_length": 64,
+    "algorithm": "CUSTOM",
+    "key": "1234567890123456",
+    "mode": "ECB",
+    "iv": null,
+    "padding": "Zero-padding"
+  }
+  
