@@ -3,6 +3,6 @@
   "algorithm": "AES",
   "key": "abcdef1234567890abcdef1234567890",
   "mode": "ECB",
-  "padding": "Zero-padding"
+  "padding": "DES padding"
 }
   

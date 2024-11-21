@@ -4,5 +4,5 @@
   "key": "abcdef1234567890abcdef1234567890",
   "mode": "CFB",
   "iv": "1234567890abcdef",
-  "padding": "Zero-padding"
+  "padding": "DES padding"
 }
