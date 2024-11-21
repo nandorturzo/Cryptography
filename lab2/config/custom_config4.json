@@ -1,8 +1,8 @@
 {
-    "text_length": 64,
-    "algorithm": "AES",
-    "key": "1234567890123456",
-    "mode": "OFB",
-    "iv": "abcdef9876543210",
-    "padding": "Zero-padding"
-  }
+  "block_size": 128,
+  "algorithm": "CUSTOM",
+  "key": "abcdef1234567890abcdef1234567890",
+  "mode": "OFB",
+  "iv": "1234567890abcdef",
+  "padding": "Zero-padding"
+}
