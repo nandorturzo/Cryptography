@@ -27,7 +27,6 @@ class CustomModes:
             decrypted += decrypted_block
         return decrypted
 
-    # CBC Mode Encryption and Decryption
     def cbc_encrypt(self, data):
         """CBC mode encryption."""
         previous_block = self.iv
@@ -52,7 +51,6 @@ class CustomModes:
             previous_block = block
         return decrypted
 
-    # CFB Mode Encryption and Decryption
     def cfb_encrypt(self, data):
         """CFB mode encryption."""
         previous_block = self.iv
@@ -77,7 +75,6 @@ class CustomModes:
             previous_block = encrypted_block
         return decrypted
 
-    # OFB Mode Encryption and Decryption
     def ofb_encrypt(self, data):
         """OFB mode encryption."""
         previous_block = self.iv
@@ -93,7 +90,6 @@ class CustomModes:
         """OFB mode decryption (same as encryption)."""
         return self.ofb_encrypt(data)
 
-    # CTR Mode Encryption and Decryption
     def ctr_encrypt(self, data):
         """CTR mode encryption."""
         counter = int.from_bytes(self.iv, 'big')

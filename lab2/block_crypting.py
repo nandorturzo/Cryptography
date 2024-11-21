@@ -61,20 +61,6 @@ class BlockCrypting:
 
         self.modes = CustomModes(self.cipher, self.block_size, self.iv)
 
-    def _get_aes_cipher(self):
-        """Return an AES cipher object based on the selected mode."""
-        if self.mode == "ECB":
-            return AES.new(self.key, AES.MODE_ECB)
-        elif self.mode == "CBC":
-            return AES.new(self.key, AES.MODE_CBC, self.iv)
-        elif self.mode == "CFB":
-            return AES.new(self.key, AES.MODE_CFB, self.iv)
-        elif self.mode == "OFB":
-            return AES.new(self.key, AES.MODE_OFB, self.iv)
-        elif self.mode == "CTR":
-            return AES.new(self.key, AES.MODE_CTR, nonce=self.iv[:8])
-        else:
-            raise ValueError(f"Unsupported AES mode: {self.mode}")
 
     def apply_padding(self, data):
         if self.padding == "Zero-padding":
@@ -145,6 +131,21 @@ class BlockCrypting:
             raise ValueError(f"Unsupported algorithm: {self.algorithm}")
 
         return self.remove_padding(decrypted_data)
+  
+    def _get_aes_cipher(self):
+        """Return an AES cipher object based on the selected mode."""
+        if self.mode == "ECB":
+            return AES.new(self.key, AES.MODE_ECB)
+        elif self.mode == "CBC":
+            return AES.new(self.key, AES.MODE_CBC, self.iv)
+        elif self.mode == "CFB":
+            return AES.new(self.key, AES.MODE_CFB, self.iv)
+        elif self.mode == "OFB":
+            return AES.new(self.key, AES.MODE_OFB, self.iv)
+        elif self.mode == "CTR":
+            return AES.new(self.key, AES.MODE_CTR, nonce=self.iv[:8])
+        else:
+            raise ValueError(f"Unsupported AES mode: {self.mode}")
 
     def custom_encrypt(self, data: bytes) -> bytes:
         """Encrypt data using the custom Vigenère cipher, applying block modes."""
